@@ -30,4 +30,5 @@ case $1 in
     N=$1
 esac
 
-code -a "boj_solutions/${N}.py"
+cd "$(dirname "${BASH_SOURCE[0]}")"
+code -a "$N.py"
