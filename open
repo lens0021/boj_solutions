@@ -14,7 +14,7 @@ case $1 in
     N=2749;;
   'tower of hanoi'|hanoi)
     N=1914;;
-  traversal|'순회')
+  traversal|순회)
     N=1991;;
   bst)
     N=5639;;
@@ -22,10 +22,12 @@ case $1 in
     N=5052;;
   trie2)
     N=11590;;
-  'graph_search')
+  graph_search)
     N=1260;;
-  'dfs')
+  유기농배추)
     N=1012;;
+  dijkstra|다익스트라)
+    N=1916;;
   *)
     N=$1
 esac
