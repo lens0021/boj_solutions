@@ -19,7 +19,6 @@ def left_child_of(index):
 
 for _ in range(number_of_numbers):
     number = int(sys.stdin.readline())
-
     if number == 0:
         if not heap:
             print(0)
@@ -49,7 +48,7 @@ for _ in range(number_of_numbers):
         # Push number to heap
         heap.append(number)
         index = len(heap) - 1
-        while index > 0 and number < heap[parent_of(number)]:
-            heap[index] = heap[parent_of(number)]
-            index = parent_of(number)
+        while index > 0 and number < heap[parent_of(index)]:
+            heap[index] = heap[parent_of(index)]
+            index = parent_of(index)
         heap[index] = number
