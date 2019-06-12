@@ -1,8 +1,8 @@
 # https://www.acmicpc.net/problem/1026
 
 _ = input()  # Drop the length of input array
-lst_a = list(map(int, input().split(' ')))
-lst_b = list(map(int, input().split(' ')))
+lst_a = list(map(int, input().split()))
+lst_b = list(map(int, input().split()))
 
 
 def bucket_sort(lst: list, digits: int, largest_first: bool):

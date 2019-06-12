@@ -4,7 +4,7 @@ number_of_nodes = int(input())
 
 tree = {}
 for _ in range(number_of_nodes):
-    parent, left, right = input().split(' ')
+    parent, left, right = input().split()
     if left == '.':
         left = None
     if right == '.':

@@ -35,5 +35,5 @@ def find_number_of_intersections(x1: int, y1: int, r1: int, x2: int, y2: int, r2
 number_of_cases = int(input())
 for _ in range(number_of_cases):
     print(find_number_of_intersections(
-        *[int(number) for number in input().split(' ')]
+        *[int(number) for number in input().split()]
     ))

@@ -4,12 +4,12 @@ number_of_test_cases = int(input())
 
 for _ in range(number_of_test_cases):
     # Read variables
-    number_of_buildings, number_of_rules = map(int, input().split(' '))
-    build_times = list(map(int, input().split(' ')))
+    number_of_buildings, number_of_rules = map(int, input().split())
+    build_times = list(map(int, input().split()))
 
     paths = []
     for _ in range(number_of_rules):
-        paths.append(tuple(map(lambda x: int(x)-1, input().split(' '))))
+        paths.append(tuple(map(lambda x: int(x)-1, input().split())))
 
     final_building = int(input())-1
 

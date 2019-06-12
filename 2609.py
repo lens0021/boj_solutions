@@ -21,7 +21,7 @@ def least_common_multiple(num1: int, num2: int) -> int:
     return (num1*num2)//greatest_common_divisor(num1, num2)
 
 
-num1, num2 = (int(number) for number in input().split(' '))
+num1, num2 = (int(number) for number in input().split())
 
 print(greatest_common_divisor(num1, num2))
 print(least_common_multiple(num1, num2))
