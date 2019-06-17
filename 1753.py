@@ -1,6 +1,7 @@
 # https://www.acmicpc.net/problem/1753
+# 시간 제한은 기본 1초에 파이썬 보정으로 ×3+2되어 5초
 import sys
-from collections import namedtuple
+from heapq import heappop, heappush
 
 Debug = False
 
@@ -12,68 +13,43 @@ def log(msg, end='\n'):
 
 number_of_verteces, number_of_edges = map(int, sys.stdin.readline().split())
 source = int(sys.stdin.readline())
-graph = {}
 
-for v in range(1, number_of_verteces+1):
-    graph[v] = {v: 0}
+graph = {num: {num: 0} for num in range(1, number_of_verteces+1)}
 
 for _ in range(number_of_edges):
-    src, dst, weight = map(int, sys.stdin.readline().split())
-    if src not in graph.keys():
-        graph[src] = {}
+    from_vertex, to_vertex, weight = map(int, sys.stdin.readline().split())
 
-    if dst not in graph[src].keys():
-        graph[src][dst] = weight
-    else:
-        graph[src][dst] = min(
-            graph[src][dst],
-            weight
-        )
+    if to_vertex not in graph[from_vertex].keys() or \
+            weight < graph[from_vertex][to_vertex]:
+        graph[from_vertex][to_vertex] = weight
 
-log(graph)
+log(f'그래프:{graph}')
 
-distances = {}
-FOUND = 0
-DISTANCE = 1
-for vertex in range(1, number_of_verteces+1):
-    if vertex in graph[source]:
-        distances[vertex] = [False, graph[source][vertex]]
-    else:
-        distances[vertex] = [False, float('inf')]
+costs = {num: float('inf') for num in range(1, number_of_verteces+1)}
+costs[source] = 0
+visit_heap = [(0, source)]
 
-distances[source][FOUND] = True
-
-while not all(distances[dst][FOUND] for dst in distances):
-    log(distances)
-    # Choose vertex has min distances
-    min_distance_vertex = None
-    min_distance = float('inf')
-
-    for vertex in range(1, number_of_verteces+1):
-        if not distances[vertex][0] and distances[vertex][1] < min_distance:
-            min_distance = distances[vertex][1]
-            min_distance_vertex = vertex
-
-    # 선탁할 수 없는 정점이 없는 경우 종료
-    if min_distance_vertex is None:
-        break
-
-    log(f'가장 짧은 거리({min_distance})를 가진 {min_distance_vertex}를 선택')
-    distances[min_distance_vertex][FOUND] = True
+while visit_heap:
+    log(len(visit_heap))
+    # Choose vertex has min cost
+    (min_cost, min_cost_vertex) = heappop(visit_heap)
+    log(f'가장 짧은 거리({min_cost})를 가진 {min_cost_vertex}를 선택')
+    log(f'그 인접 정점들({graph[min_cost_vertex]}) 중에서')
 
     # Recalculate
-    for vertex in distances:
-        if distances[vertex][FOUND]:
-            continue
-
-        if vertex in graph[min_distance_vertex]:
-            distances[vertex][DISTANCE] = min(
-                min_distance + graph[min_distance_vertex][vertex],
-                distances[vertex][DISTANCE]
+    for vertex in graph[min_cost_vertex]:
+        if min_cost + graph[min_cost_vertex][vertex] < costs[vertex]:
+            log(
+                f'바로 {vertex}로 가는 것(비용:{costs[vertex]}) 대신'
+                f'{min_cost_vertex}을(를) 경유하도록 갱신'
+                f'(비용:{min_cost + graph[min_cost_vertex][vertex]})'
             )
+            costs[vertex] = min_cost + \
+                graph[min_cost_vertex][vertex]
+            heappush(visit_heap, (costs[vertex], vertex))
 
-for vertex in distances:
-    if distances[vertex][DISTANCE] == float('inf'):
+for vertex in costs:
+    if costs[vertex] == float('inf'):
         print('INF')
     else:
-        print(distances[vertex][DISTANCE])
+        print(costs[vertex])
