@@ -7,57 +7,49 @@
 
 import sys
 
-Debug = False
-
 
 def log(msg, end='\n'):
-    if Debug:
+    if True:
         print(msg, end=end)
 
 
 class TrieNode:
-    def __init__(self, is_end=False):
-        self.is_end = is_end
+    def __init__(self):
+        self.is_end = 0
         self.subtree_dict = {}
 
     def add_with_check(self, key):
         log(f'"{key}" 추가 시작:')
-        found_prefix = False
+        found_count = 0
         node = self
         for i, ch in enumerate(key):
-            is_last_character = i == len(key)-1
-            log(f'{i}번 참조', end='')
-            if is_last_character:
-                log('이자 마지막 글자 ', end='')
-            log(f'{ch}에 대해')
+            log(f'{ch}에 대해', end=' ')
 
             if ch not in node.subtree_dict:
-                log(f'서브트리({list(node.subtree_dict.keys())})에 ')
-                log(f'{ch}가 없으므로 새로 생성')
-                node.subtree_dict[ch] = TrieNode(is_end=is_last_character)
+                log(f'서브트리({list(node.subtree_dict.keys())})에', end=' ')
+                node.subtree_dict[ch] = TrieNode()
+                log(f'{ch}가 없으므로 새로 생성({list(node.subtree_dict.keys())})')
 
-            log(f'현재 서브트리 구성: {list(node.subtree_dict.keys())}')
             # 서브트리로 이동
             node = node.subtree_dict[ch]
+            log('서브트리로 이동')
 
-            if not is_last_character and node.is_end:
-                found_prefix = True
-                log('    찾은 걸로 표시')
+            found_count += node.is_end
+            if node.is_end > 0 and key[:i+1] == key[-i-1:]:
+                log(f'추가:{node.is_end}')
 
-        return found_prefix
+        node.is_end += 1
+
+        return found_count+1
 
 
-forword_trie = TrieNode(False)
-reversed_trie = TrieNode(False)
-count = 0
+trie = TrieNode()
 
-for _ in range(int(sys.stdin.readline())):
-    string = sys.stdin.readline().rstrip()
-
-    forword = forword_trie.add_with_check(string)
-    # reverse = reversed_trie.add_with_check(string[::-1])
-
-    if forword:
-        count += 1
-
-print(count)
+input_length = int(sys.stdin.readline())
+if input_length == 1:
+    print(1)
+else:
+    print(max([
+        trie.add_with_check(sys.stdin.readline().rstrip()) for _ in
+        range(input_length)
+    ]))
