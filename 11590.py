@@ -34,9 +34,9 @@ class TrieNode:
             node = node.subtree_dict[ch]
             log('서브트리로 이동')
 
-            found_count += node.is_end
             if node.is_end > 0 and key[:i+1] == key[-i-1:]:
                 log(f'추가:{node.is_end}')
+                found_count += node.is_end
 
         node.is_end += 1
 
