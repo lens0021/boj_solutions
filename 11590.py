@@ -5,7 +5,8 @@
 # xj both starts with and ends with string xi. The number of teleportations a
 # Loda can make is the length of the longest described subsequence.
 
-# Thanks for Adela https://github.com/love-adelar/algorithm/blob/16d6fa0d0da7d1973b9f13fba1fea85f58d22cac/acmicpc/acmicpc11590/acmicpc11590.py
+# Thanks for Adela
+# https://github.com/love-adelar/algorithm/blob/16d6fa0d0da7d1973b9f13fba1fea85f58d22cac/acmicpc/acmicpc11590/acmicpc11590.py
 
 
 import sys
@@ -52,7 +53,6 @@ class TrieNode:
 
 
 input_length = int(sys.stdin.readline())
-previous_sequence_of = [None for _ in range(input_length)]
 
 if input_length == 1:
     print(1)
@@ -64,4 +64,5 @@ else:
         for _ in range(input_length)
     ]))
 
-# Thanks for Adela https://github.com/love-adelar/algorithm/blob/16d6fa0d0da7d1973b9f13fba1fea85f58d22cac/acmicpc/acmicpc11590/acmicpc11590.py
+# Thanks for Adela
+# https://github.com/love-adelar/algorithm/blob/16d6fa0d0da7d1973b9f13fba1fea85f58d22cac/acmicpc/acmicpc11590/acmicpc11590.py
