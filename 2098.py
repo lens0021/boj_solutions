@@ -29,8 +29,6 @@ def brute_force(dis):
 
         return min_dis
 
-# 아래는 bitsets이란 것의 존재를 모르고 짠 코드입니다. bitsets을 쓰십시오
-
 
 def bool_list_to_int(lst):
     num = 0
