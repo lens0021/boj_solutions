@@ -1,6 +1,14 @@
 # https://www.acmicpc.net/problem/2098
 import sys
+from functools import lru_cache
 from itertools import permutations
+
+
+def convert_input(str):
+    if str == '0':
+        return float('inf')
+    else:
+        return int(str)
 
 
 def brute_force(dis):
@@ -21,16 +29,61 @@ def brute_force(dis):
 
         return min_dis
 
+# 아래는 bitsets이란 것의 존재를 모르고 짠 코드입니다. bitsets을 쓰십시오
 
-def convent_input(str):
-    if str == '0':
-        return float('inf')
-    else:
-        return int(str)
+
+def bool_list_to_int(lst):
+    num = 0
+    multiplier = 1
+    for ele in lst:
+        if ele:
+            num += multiplier
+        multiplier *= 2
+
+    return num
+
+
+def int_to_bool_list(num):
+    lst = []
+    while num > 0:
+        lst.append(num % 2 == 1)
+        num //= 2
+
+    return lst
 
 
 number_of_vertices = int(sys.stdin.readline())
-dis = [list(map(convent_input, sys.stdin.readline().split()))
+dis = [list(map(convert_input, sys.stdin.readline().split()))
        for _ in range(number_of_vertices)]
 
-print(brute_force(dis))
+
+@lru_cache(None)
+def min_weight_using_vertices(destination, usable_vertices: int, rec_level=0):
+    if usable_vertices == 0:
+        return dis[0][destination]
+
+    usable_vertices = int_to_bool_list(usable_vertices)
+
+    sub_distances = {}
+    for i, is_useable in enumerate(usable_vertices):
+        if not is_useable:
+            continue
+        elif dis[i][destination] == 0:
+            continue
+
+        new_usable_vertices = usable_vertices.copy()
+        new_usable_vertices[i] = False
+        sub_distances[i] = min_weight_using_vertices(
+            i, bool_list_to_int(new_usable_vertices),
+            rec_level+1
+        ) + dis[i][destination]
+
+    return min(sub_distances.values())
+
+
+# print(dis)
+all_but_zero = [True for _ in range(number_of_vertices)]
+all_but_zero[0] = False
+
+# print(brute_force(dis))
+print(min_weight_using_vertices(0, bool_list_to_int(all_but_zero)))
