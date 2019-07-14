@@ -1,5 +1,4 @@
 # https://www.acmicpc.net/problem/2098
-# bitsets이란 것의 존재를 모르고 짠 코드입니다. bitsets을 쓰십시오
 import sys
 from itertools import permutations
 
