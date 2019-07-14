@@ -23,29 +23,15 @@ def brute_force(distances):
         return min_dis
 
 
-def bool_list_to_int(lst):
-    num = 0
-    multiplier = 1
-    for ele in lst:
-        if ele:
-            num += multiplier
-        multiplier *= 2
-
-    return num
-
-
-def int_to_bool_list(num):
-    lst = []
-    while num > 0:
-        lst.append(num % 2 == 1)
-        num //= 2
-
-    return lst
-
-
 class BitSet:
     def __init__(self):
         self._int = 0
+
+    @staticmethod
+    def new_from_number(num):
+        bit_set = BitSet()
+        bit_set._int = num
+        return bit_set
 
     def get(self, index):
         num = self._int
@@ -53,11 +39,33 @@ class BitSet:
         return num & 1 == 1
 
     def set(self, index, value=True):
-        num = 1 << index-1
-        self._int |= num
+        num = 1 << index
+        if value:
+            self._int |= num
+        else:
+            self._int &= ~num
 
     def __str__(self):
-        return str(self._int)
+        return bin(self._int)
+
+    def indices_of_trues(self):
+        index = 0
+        num = self._int
+        lst = []
+
+        while num > 0:
+            if num & 1 == 1:
+                lst.append(index)
+            num >>= 1
+            index += 1
+
+        return lst
+
+    def not_all(self):
+        return self._int == 0
+
+    def copy(self):
+        return BitSet.new_from_number(self._int)
 
 
 NUMBER_OF_VERTICES = int(sys.stdin.readline())
@@ -69,23 +77,19 @@ distances = [
 
 
 @lru_cache(None)
-def min_weight_using_vertices(destination, usable_vertices: int, rec_level=0):
-    if usable_vertices == 0:
+def min_weight_using_vertices(destination, usable_vertices: BitSet, rec_level=0):
+    if usable_vertices.not_all():
         return distances[0][destination]
 
-    usable_vertices = int_to_bool_list(usable_vertices)
-
     sub_distances = {}
-    for i, is_useable in enumerate(usable_vertices):
-        if not is_useable:
-            continue
-        elif distances[i][destination] == 0:
+    for i in usable_vertices.indices_of_trues():
+        if distances[i][destination] == 0:
             continue
 
         new_usable_vertices = usable_vertices.copy()
-        new_usable_vertices[i] = False
+        new_usable_vertices.set(i, False)
         sub_distances[i] = min_weight_using_vertices(
-            i, bool_list_to_int(new_usable_vertices),
+            i, new_usable_vertices,
             rec_level+1
         ) + distances[i][destination]
 
@@ -93,8 +97,7 @@ def min_weight_using_vertices(destination, usable_vertices: int, rec_level=0):
 
 
 print(distances)
-all_but_zero = [True for _ in range(NUMBER_OF_VERTICES)]
-all_but_zero[0] = False
+all_but_zero = BitSet.new_from_number(2 ** NUMBER_OF_VERTICES - 2)
 
 # print(brute_force(distances))
-print(min_weight_using_vertices(0, bool_list_to_int(all_but_zero)))
+print(min_weight_using_vertices(0, all_but_zero))
