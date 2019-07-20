@@ -97,6 +97,11 @@ def min_weight_using_vertices(destination, usable_vertices: BitSet):
 
 
 def digit_sum(num: int, base=2):
+    '''
+    자리수의 합을 구하는 함수. base는 밑수. 예시:
+    - digit_sum(13, 10) = 1 + 3 = 9
+    - digit_sum(int('1110', 2)), 10) = 1 + 1 + 1 + 0 = 3
+    '''
     sum = 0
     while num > 0:
         sum += num % base
@@ -105,18 +110,38 @@ def digit_sum(num: int, base=2):
 
 
 def iteratively_find_min_weight():
+    #      +---> 오른쪽 세 번째 비트가 0이므로 3번 정점을 사용하지 않는다는 뜻
+    #      |+--> 오른쪽 두 번째 비트가 0이므로 2번 정점을 사용하지 않는다는 뜻
+    #      ||+-> 오른쪽 첫 번째 비트가 1이므로 1번 정점을 사용한다는 뜻
+    #      vvv
+    # meme[001][n]은 1번 정점만을 사용하여 n번 정점으로 가는 최단 거리
+    # meme[010][n]은 2번 정점만을 사용하여 n번 정점으로 가는 최단 거리
+    # meme[011][n]은 1번과 2번 정점만을 사용하여 n번 정점으로 가는 최단 거리
     memo = [
-        [float('inf') for _ in range(NUMBER_OF_VERTICES)]
+        [
+            float('inf')
+            # 도착지로 사용할 수 있는 정점 수 만큼 초기화: [0, 1, 2, 3]
+            for _ in range(NUMBER_OF_VERTICES)
+        ]
+        # 출발지이자 도착지인 0번 정점을 제외한 나머지를 사용할지 혹은 안 할지의 경우의 수만큼 초기화
         for _ in range(2**(NUMBER_OF_VERTICES-1))
     ]
 
+    # NUMBER_OF_VERTICES가 4일 때 sequence = [ 1, 2, 3, ... 6, 7 ]
+    # 각 원소는 비트셋을 뜻하여 위 예시는 [ 001, 010, 011, ... 110, 111 ](각 수는 이진법)를 의미.
     sequence = list(range(1, 2**(NUMBER_OF_VERTICES-1)))
+    # 자릿수의 합에 따라 오름차순으로 정렬
+    # memo[011]을 계산하는 데에는 memo[010]과 memo[001]가 필요하는 등. 자릿수의 합이 작은 수부터 구해야 하므로.
     sequence.sort(key=digit_sum)
+    # TODO list 안 만들고 Generator 등으로 똑같은 순서를 만들 수 있으면 대체하기
 
+    # memo[0]은 아무런 다른 정점을 거치지 않고 각 정점에 도달하는 최단거리이므로 그냥 그래프 각 간선의 가중치.
     for vertex in range(NUMBER_OF_VERTICES):
         memo[0][vertex] = DISTANCES[0][vertex]
 
+    # Main procedure
     for bitset in sequence:
+        # 비트셋이 나타내는 방문한 정점과 방문하지 않은 정점을 집합으로 구하기
         vertex = 0
         visited, unvisited = [], []
         for i in range(1, NUMBER_OF_VERTICES):
@@ -125,16 +150,20 @@ def iteratively_find_min_weight():
             else:
                 unvisited.append(i)
 
+        # 이 for문의 마지막에는 0번 정점(출발점)으로 가는 최단 거리도 계산시키기 위해 unvisited에 추가
         if bitset == 2**(NUMBER_OF_VERTICES-1)-1:
             unvisited.append(0)
 
-        # print('bitset:', format(bitset, '03b'), end=' ')
+        # print('bitset:', format(bitset, f'0{NUMBER_OF_VERTICES}b'), end=' ')
         # print('( visited:', visited, 'unvisited:', unvisited, ')')
 
         for destination in unvisited:
             # print(f'To go {destination}', end=' ')
             min_distance = float('inf')
             for waypoint in visited:
+                # memo[011][3]을 구하기 위해서는 1번 정점을 경유하는 경우와 2번 정점을 경유하는 것 중 빠른 것을 구해야 하며
+                # 즉 memo[001][2]+(2에서 3으로 가는 비용) 혹은 memo[010][1]+(1에서 3으로 가는 비용) 중 적은 것을 해야 한다
+                # 아래는 위 예시에서 001과 010에 해당하는 비트셋.
                 waypoint_bitset = bitset & ~(1 << (waypoint-1))
                 # print(
                 #     'using',
@@ -154,12 +183,13 @@ def iteratively_find_min_weight():
 
             # print(
             #     f'Set memo[{format(bitset, "03b")}][{destination}] to {memo[bitset][destination]}')
+    # print(memo)
     return memo[-1][0]
 
 
 # print(DISTANCES)
-all_but_zero = BitSet.new_from_number(2 ** NUMBER_OF_VERTICES - 2)
 
 # print(brute_force(DISTANCES))
+all_but_zero = BitSet.new_from_number(2 ** NUMBER_OF_VERTICES - 2)
 # print(min_weight_using_vertices(0, all_but_zero))
 print(iteratively_find_min_weight())
