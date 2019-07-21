@@ -96,19 +96,6 @@ def min_weight_using_vertices(destination, usable_vertices: BitSet):
     return min(sub_distances)
 
 
-def digit_sum(num: int, base=2):
-    '''
-    자리수의 합을 구하는 함수. base는 밑수. 예시:
-    - digit_sum(13, 10) = 1 + 3 = 9
-    - digit_sum(int('1110', 2)), 10) = 1 + 1 + 1 + 0 = 3
-    '''
-    sum = 0
-    while num > 0:
-        sum += num % base
-        num //= base
-    return sum
-
-
 def iteratively_find_min_weight():
     #      +---> 오른쪽 세 번째 비트가 0이므로 3번 정점을 사용하지 않는다는 뜻
     #      |+--> 오른쪽 두 번째 비트가 0이므로 2번 정점을 사용하지 않는다는 뜻
@@ -127,20 +114,12 @@ def iteratively_find_min_weight():
         for _ in range(2**(NUMBER_OF_VERTICES-1))
     ]
 
-    # NUMBER_OF_VERTICES가 4일 때 sequence = [ 1, 2, 3, ... 6, 7 ]
-    # 각 원소는 비트셋을 뜻하여 위 예시는 [ 001, 010, 011, ... 110, 111 ](각 수는 이진법)를 의미.
-    sequence = list(range(1, 2**(NUMBER_OF_VERTICES-1)))
-    # 자릿수의 합에 따라 오름차순으로 정렬
-    # memo[011]을 계산하는 데에는 memo[010]과 memo[001]가 필요하는 등. 자릿수의 합이 작은 수부터 구해야 하므로.
-    sequence.sort(key=digit_sum)
-    # TODO list 안 만들고 Generator 등으로 똑같은 순서를 만들 수 있으면 대체하기
-
     # memo[0]은 아무런 다른 정점을 거치지 않고 각 정점에 도달하는 최단거리이므로 그냥 그래프 각 간선의 가중치.
     for vertex in range(NUMBER_OF_VERTICES):
         memo[0][vertex] = DISTANCES[0][vertex]
 
     # Main procedure
-    for bitset in sequence:
+    for bitset in range(1, 2**(NUMBER_OF_VERTICES-1)):
         # 비트셋이 나타내는 방문한 정점과 방문하지 않은 정점을 집합으로 구하기
         vertex = 0
         visited, unvisited = [], []
