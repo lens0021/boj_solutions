@@ -1,10 +1,11 @@
 # https://www.acmicpc.net/problem/1912
 from sys import stdin
+from math import inf
 
 
 def solution(iter) -> int:
-    summary = float('-inf')
-    max_summary = float('-inf')
+    summary = -inf
+    max_summary = -inf
     for num in iter:
         summary = max(
             summary + num,
