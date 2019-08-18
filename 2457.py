@@ -1,6 +1,5 @@
 # https://www.acmicpc.net/problem/2457
 from sys import stdin
-from math import inf
 from collections import namedtuple
 
 START = 301
@@ -31,19 +30,25 @@ for line in lines[1:]:
 
 roses.sort()
 
-left = START
-right = -inf
 count = 0
-while right <= END:
-    unfound = True
-    for rose in roses:
-        if rose.bloom <= left and rose.fall > right:
-            right = rose.fall
-            unfound = False
-    if unfound:
-        print(0)
-        exit(0)
-    left = right
-    count += 1
+right = 0
+checkpoint = START
+updated = False
 
-print(count)
+for rose in roses:
+    if rose.bloom > checkpoint:
+        checkpoint = max(checkpoint, right)
+        right = checkpoint
+        updated = False
+
+    if rose.bloom <= checkpoint and checkpoint <= END:
+        if not updated:
+            count += 1
+            updated = True
+
+        right = max(right, rose.fall)
+
+if right > END:
+    print(count)
+else:
+    print(0)
