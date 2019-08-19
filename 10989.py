@@ -2,12 +2,11 @@
 
 from sys import stdin, stdout
 
-num_of_nums = [0] * (10000+1)
+count_of_nums = [0] * (10000+1)
 
 length = int(stdin.readline())
 for _ in range(length):
-    num_of_nums[int(stdin.readline())] += 1
+    count_of_nums[int(stdin.readline())] += 1
 
-for num, ct in enumerate(num_of_nums):
-    for _ in range(ct):
-        stdout.write(str(num)+'\n')
+for num in range(10000+1):
+    stdout.write((str(num) + '\n') * count_of_nums[num])
