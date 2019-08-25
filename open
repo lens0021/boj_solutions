@@ -28,6 +28,10 @@ case $1 in
     N=1012;;
   dijkstra|다익스트라)
     N=1916;;
+  coin)
+    N=2293;;
+  coin2)
+    N=2294;;
   *)
     N=$1
 esac
