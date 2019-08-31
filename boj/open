@@ -32,6 +32,8 @@ case $1 in
     N=2293;;
   coin2)
     N=2294;;
+  tsp)
+    N=2098;;
   *)
     N=$1
 esac
