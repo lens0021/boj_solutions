@@ -1,4 +1,6 @@
 __pycache__/
 *.input*.txt
 *.output*.txt
+*.test.py
 *.your.txt
+casetest.py
