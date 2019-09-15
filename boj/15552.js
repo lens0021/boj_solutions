@@ -4,13 +4,18 @@
 const process = require("process");
 let output = "";
 let num, addend;
+let sizeIsReaded = false;
 process.stdin.on("data", data => {
-  for (const ch of data) {
-    switch (ch) {
+  let i = 0;
+  if (!sizeIsReaded) {
+    while (data[i++] !== 10) continue;
+    sizeIsReaded = true;
+  }
+
+  for (; i < data.length; i++) {
+    switch (data[i]) {
       case 10: // "\n"
-        if (addend) {
-          output += addend + num + "\n";
-        }
+        output += addend + num + "\n";
         num = undefined;
         break;
       case 32: // " "
@@ -18,11 +23,7 @@ process.stdin.on("data", data => {
         num = undefined;
         break;
       default:
-        if (num) {
-          num = num * 10 + (ch - 48);
-        } else {
-          num = ch - 48;
-        }
+        num = num ? num * 10 + (data[i] - 48) : data[i] - 48;
     }
   }
 });
