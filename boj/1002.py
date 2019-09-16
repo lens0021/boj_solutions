@@ -1,5 +1,7 @@
+# https://www.acmicpc.net/problem/1002
 # import math
 # We don't use math.sqrt() to avoid float comparing
+from sys import stdin, stdout
 
 
 def find_number_of_intersections(x1: int, y1: int, r1: int, x2: int, y2: int, r2: int) -> int:
@@ -32,8 +34,8 @@ def find_number_of_intersections(x1: int, y1: int, r1: int, x2: int, y2: int, r2
             return -2
 
 
-number_of_cases = int(input())
-for _ in range(number_of_cases):
-    print(find_number_of_intersections(
-        *[int(number) for number in input().split()]
-    ))
+stdout.write('\n'.join(map(str, [
+    find_number_of_intersections(*map(int, line.split(' ')))
+    for line in
+    stdin.read().splitlines()[1:]
+]))+'\n')
