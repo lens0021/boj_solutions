@@ -1,15 +1,10 @@
 # https://www.acmicpc.net/problem/2588
 import sys
 
-num1 = sys.stdin.readline().rstrip()
-num2 = sys.stdin.readline().rstrip()
+num1 = int(sys.stdin.readline().rstrip())
+num2 = int(sys.stdin.readline().rstrip())
 
+for digit in str(num2)[::-1]:
+  print(int(digit) * num1)
 
-while num2 > 0:
-    output = 0
-    num1_copied = num1
-    while num1_copied > 0:
-        output += num2 % (10 * num1_copied % 10)
-        num1_copied = num1_copied // 10
-
-    print(output)
+print(num1 * num2)
